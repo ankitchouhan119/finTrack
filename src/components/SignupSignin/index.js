@@ -12,7 +12,7 @@ import { auth } from '../../firebase';
 import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
 import { getDoc } from 'firebase/firestore';
-import { GoogleAuthProvider } from 'firebase/auth/web-extension';
+import { FacebookAuthProvider, GoogleAuthProvider } from 'firebase/auth/web-extension';
 
 function SignUpSignIn() {
   const [name, setName] = useState("");
