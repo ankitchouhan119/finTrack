@@ -1,0 +1,9 @@
+.custom-input:focus{
+    outline: none;
+    opacity: 1;
+    transition: all 0.2s;
+}
+
+.custom-input::placeholder{
+    color: grey;
+}

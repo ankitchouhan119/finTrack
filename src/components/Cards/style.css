@@ -1,0 +1,4 @@
+.my-card{
+    box-shadow: var(--shadow-color);
+    font-family: "Montserrat", sans-serif;
+}
