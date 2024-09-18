@@ -18,7 +18,7 @@ function Header() {
   // }, [user, loading]);
 
   useEffect(() => {
-    if (user && window.location.pathname !== "/landingPage") {
+    if (user && window.location.pathname !== "/") {
       navigate("/dashboard");
     }
   }, [user, loading, navigate]);
@@ -41,8 +41,12 @@ function Header() {
     }
   }
 
+  function loginFunc(){
+    navigate("/signup");
+  }
+
   function home(){
-    navigate("/landingPage")
+    navigate("/")
   }
   console.log("environment", process.env.REACT_APP_PROJECT_ID)
 
@@ -57,23 +61,30 @@ function Header() {
   // }, [user]);
 
   return (
-    <div className='navbar py-[0.2rem] px-[1.5rem] sticky top-0 left-0 flex justify-between item-center'>
-      <div 
-       className="logo font-medium  text-xl m-0 text-white flex justify-start items-center">
-        <img src="logo2.png" className='w-[10%] cursor-pointer' alt="Logo" onClick={home}/>
-        
-        <p className='font-semibold  text-xl px-2 cursor-pointer' onClick={home}>
-          FinTrack
-        </p>
-      </div>
-      {user && (
+    <div className='navbar py-[0.2rem] px-[1.5rem] sticky top-0 left-0 flex justify-between items-center'>
+  <div 
+   className="logo font-medium text-xl m-0 text-white flex justify-start items-center">
+    <img src="logo2.png" className='w-[10%] cursor-pointer' alt="Logo" onClick={home} />
+    
+    <p className='font-semibold text-xl px-2 cursor-pointer' onClick={home}>
+      FinTrack
+    </p>
+  </div>
 
-      <div className='logout link font-medium  text-xl m-0 text-white flex justify-start items-centert py-3 gap-2 mr-3'>
-        <img src={user.photoURL ? user.photoURL: userImg} alt="" className='rounded-full  border-1SSSS border-white h-[2rem] w-[2rem]' style={{}}/>
-        <p onClick={logoutFunc} className='cursor-pointer opacity-[0.8] hover:opacity-[1] hover:transition-all  '>Logout</p>
-      </div>
-      )}
+  {user ? (
+    <div className='logout link font-medium text-xl m-0 text-white flex justify-start items-center py-3 gap-2 mr-3'>
+      <img src={user.photoURL ? user.photoURL : userImg} alt="" className='rounded-full border-1 border-white h-[2rem] w-[2rem]' />
+      <p onClick={logoutFunc} className='cursor-pointer opacity-[0.8] hover:opacity-[1] hover:transition-all'>
+        Logout
+      </p>
     </div>
+  ) : (
+    <button onClick={loginFunc} className='loginButton text-white text-xl cursor-pointer'>
+      Login
+    </button>
+  )}
+</div>
+
   )
 }
 

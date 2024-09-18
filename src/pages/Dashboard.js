@@ -171,7 +171,7 @@ function Dashboard() {
   };
 
   function landingPage() {
-    navigate("/landingPage");
+    navigate("/");
   }
 
   let sortedTransactions = transactions.sort((a, b) => {

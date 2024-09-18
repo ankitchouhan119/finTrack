@@ -37,7 +37,7 @@ function SignUpSignIn() {
           toast.success("User Logged In")
           console.log("user logged in ", user)
           setLoading(false);
-          navigate("/landingPage")
+          navigate("/")
           // ...
         })
         .catch((error) => {
@@ -79,7 +79,7 @@ function SignUpSignIn() {
             setPassword("")
             setConfirmPassword("")
             createDoc(user);
-            navigate("/landingPage")
+            navigate("/")
 
             // ...
           })
@@ -145,7 +145,7 @@ function SignUpSignIn() {
         const user = result.user;
         console.log("user>>", user)
         createDoc(user);
-        navigate("/landingPage")
+        navigate("/")
         toast.success("user authenticated!")
         setLoading(false);
         // IdP data available using getAdditionalUserInfo(result)
@@ -176,7 +176,7 @@ function SignUpSignIn() {
           const user = result.user;
           console.log("user>>", user);
           createDoc(user); // Save user to Firestore or your database
-          navigate("/landingPage");
+          navigate("/");
           toast.success("User authenticated!");
           setLoading(false);
         })

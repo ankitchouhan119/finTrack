@@ -15,6 +15,7 @@ import graph from '../components/assets/graph.png'
 import csv_exp from '../components/assets/csv_exp.png'
 import csv_imp from '../components/assets/csv_imp.png'
 import table from '../components/assets/table.png'
+import Footer from '../components/Footer/footer';
 
 
 
@@ -33,7 +34,7 @@ function LandingPage() {
     }
 
     return (
-        <div className='mb-[8rem]'>
+        <div className=''>
             <Header />
             <div className='w-full lg:h-[60vh] h-[35vh] gap-4 flex justify-center items-center flex-col text-center'>
                 <p className='lg:text-6xl text-4xl font-semibold text-blue-500'>Simplify Budgeting</p>
@@ -166,6 +167,8 @@ function LandingPage() {
                     </div>
                 </div>
             </div>
+
+            <Footer/>
 
 
         </div>
