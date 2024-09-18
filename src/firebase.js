@@ -21,4 +21,5 @@ const analytics = getAnalytics(app);
 const db = getFirestore(app);
 const auth = getAuth(app);
 const provider = new GoogleAuthProvider();
-export {db, auth, provider, doc, setDoc}
+const provider1 =  new FacebookAuthProvider();
+export {db, auth, provider,provider1, doc, setDoc}

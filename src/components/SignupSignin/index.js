@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import './style.css'
 import Input from '../Input/input'
 import Button from '../Button/button';
-import { setDoc, doc, db, provider } from '../../firebase';
+import { setDoc, doc, db, provider, provider1 } from '../../firebase';
 import { SocialIcon } from 'react-social-icons/component'
 import 'react-social-icons/facebook'
 import 'react-social-icons/google'
@@ -145,7 +145,7 @@ function SignUpSignIn() {
         const user = result.user;
         console.log("user>>", user)
         createDoc(user);
-        navigate("/dashboard")
+        navigate("/landingPage")
         toast.success("user authenticated!")
         setLoading(false);
         // IdP data available using getAdditionalUserInfo(result)
@@ -162,6 +162,35 @@ function SignUpSignIn() {
       setLoading(false);
     }
     
+  }
+
+  function facebookAuth() {
+    setLoading(true);
+    try {
+      signInWithPopup(auth, provider1)
+        .then((result) => {
+          // This gives you a Facebook Access Token. You can use it to access the Facebook API.
+          const credential = FacebookAuthProvider.credentialFromResult(result);
+          const token = credential.accessToken;
+          // The signed-in user info.
+          const user = result.user;
+          console.log("user>>", user);
+          createDoc(user); // Save user to Firestore or your database
+          navigate("/landingPage");
+          toast.success("User authenticated!");
+          setLoading(false);
+        })
+        .catch((error) => {
+          // Handle Errors here.
+          const errorCode = error.code;
+          const errorMessage = error.message;
+          toast.error(errorMessage);
+          setLoading(false);
+        });
+    } catch (e) {
+      toast.error(e.message);
+      setLoading(false);
+    }
   }
 
   return (
@@ -203,7 +232,7 @@ function SignUpSignIn() {
                   style={{ width: '2.5rem', height: '2.5rem' }}
                 />
               </button>
-              <button>
+              <button onClick={facebookAuth}>
                 <SocialIcon
                   url="https://www.facebook.com"
                   style={{ width: '2.5rem', height: '2.5rem' }}
