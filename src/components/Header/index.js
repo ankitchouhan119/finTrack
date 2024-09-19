@@ -72,14 +72,14 @@ function Header() {
   </div>
 
   {user ? (
-    <div className='logout link font-medium text-xl m-0 text-white flex justify-start items-center py-3 gap-2 mr-3'>
+    <div className='logout link font-medium text-xl m-0 text-white flex justify-start items-center py-3 gap-2 mr-5'>
       <img src={user.photoURL ? user.photoURL : userImg} alt="" className='rounded-full border-1 border-white h-[2rem] w-[2rem]' />
       <p onClick={logoutFunc} className='cursor-pointer opacity-[0.8] hover:opacity-[1] hover:transition-all'>
         Logout
       </p>
     </div>
   ) : (
-    <button onClick={loginFunc} className='loginButton text-white text-xl cursor-pointer'>
+    <button onClick={loginFunc} className='loginButton text-white text-xl cursor-pointer mr-5'>
       Login
     </button>
   )}

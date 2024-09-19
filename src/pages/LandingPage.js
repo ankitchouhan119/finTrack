@@ -16,6 +16,8 @@ import csv_exp from '../components/assets/csv_exp.png'
 import csv_imp from '../components/assets/csv_imp.png'
 import table from '../components/assets/table.png'
 import Footer from '../components/Footer/footer';
+import { motion } from 'framer-motion';
+
 
 
 
@@ -37,9 +39,18 @@ function LandingPage() {
         <div className=''>
             <Header />
             <div className='w-full lg:h-[60vh] h-[35vh] gap-4 flex justify-center items-center flex-col text-center'>
-                <p className='lg:text-6xl text-4xl font-semibold text-blue-500'>Simplify Budgeting</p>
-                <p className='lg:text-6xl text-4xl text-gray-500'> with Easy <span className='font-semibold  text-blue-500'>Expense Tracking</span> </p>
+                <motion.p
+                initial={{ x: -100, opacity: 0 }}  // Starts off-screen above
+                animate={{ x: 0, opacity: 1 }}     // Slides to original position
+                transition={{ duration: 0.6, ease: "easeOut" }}
+                 className='lg:text-6xl text-4xl font-semibold text-blue-500'>Simplify Budgeting</motion.p>
+                <motion.p
+                initial={{ x: 100, opacity: 0 }}  
+                animate={{ x: 0, opacity: 1 }}    
+                transition={{ duration: 0.6, ease: "easeOut" }}
+                className='lg:text-6xl text-4xl text-gray-500'> with Easy <span className='font-semibold  text-blue-500'>Expense Tracking</span> </motion.p>
                 <button
+                
                     onClick={dashboard}
                     className='border-2 border-blue-500 mt-9 px-5 py-2 rounded-lg text-blue-500 hover:text-white hover:bg-blue-500 transition-all duration-300'
                 >
@@ -51,12 +62,16 @@ function LandingPage() {
             <div className='flex justify-center items-center mb-[5rem]'>
 
                 <div className='flex justify-center items-center flex-col lg:flex-row gap-5 w-[80%]'>
-                    <div className='flex justify-center shadow1 items-center w-full lg:w-[25%] flex-col gap-1 bg-blue-100 p-7 rounded-md'>
+                    <motion.div
+                    initial={{ x: -100, opacity: 0 }}  
+                    animate={{ x: 0, opacity: 1 }}    
+                    transition={{ duration: 0.6, ease: "easeOut" }}
+                     className='flex justify-center shadow1 items-center w-full lg:w-[25%] flex-col gap-1 bg-blue-100 p-7 rounded-md'>
                         <div className='border-[.7rem] border-gray-300 rounded-full p-3 hover:border-blue-500 transition-all duration-200 cursor-pointer'>
                             <img className='w-[5rem]' src={secure} alt="" />
                         </div>
                         <p className='text-lg font-semibold'>100% Secured Data</p>
-                    </div>
+                    </motion.div>
                     <div className='flex lg:w-[25%] shadow1 w-full justify-center items-center flex-col gap-2 bg-blue-100 p-7 rounded-md'>
                         <div className='border-[.7rem] border-gray-300 rounded-full p-3 hover:border-sky-500 transition-all duration-200 cursor-pointer'>
                             <img className='w-[5rem]' src={users} alt="" />
