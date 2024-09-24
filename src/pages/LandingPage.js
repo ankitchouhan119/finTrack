@@ -72,31 +72,47 @@ function LandingPage() {
                         </div>
                         <p className='text-lg font-semibold'>100% Secured Data</p>
                     </motion.div>
-                    <div className='flex lg:w-[25%] shadow1 w-full justify-center items-center flex-col gap-2 bg-blue-100 p-7 rounded-md'>
+                    <motion.div
+                    initial={{ x: -100, opacity: 0 }}  
+                    animate={{ x: 0, opacity: 1 }}    
+                    transition={{ duration: 0.6, ease: "easeOut" }}
+                    className='flex lg:w-[25%] shadow1 w-full justify-center items-center flex-col gap-2 bg-blue-100 p-7 rounded-md'>
                         <div className='border-[.7rem] border-gray-300 rounded-full p-3 hover:border-sky-500 transition-all duration-200 cursor-pointer'>
                             <img className='w-[5rem]' src={users} alt="" />
                         </div>
                         <p className='text-lg font-semibold'>1 Million+ users</p>
-                    </div>
-                    <div className='flex lg:w-[25%] shadow1 w-full justify-center items-center flex-col gap-2 bg-blue-100 p-7 rounded-md'>
+                    </motion.div>
+                    <motion.div
+                    initial={{ x: 100, opacity: 0 }}  
+                    animate={{ x: 0, opacity: 1 }}    
+                    transition={{ duration: 0.6, ease: "easeOut" }}
+                    className='flex lg:w-[25%] shadow1 w-full justify-center items-center flex-col gap-2 bg-blue-100 p-7 rounded-md'>
                         <div className='border-[.7rem] border-gray-300 rounded-full p-3 hover:border-indigo-500 transition-all duration-200 cursor-pointer'>
                             <img className='w-[5rem]' src={review} alt="" />
                         </div>
                         <p className='text-lg font-semibold'>100K+ 5-star Reviews</p>
-                    </div>
-                    <div className='flex lg:w-[25%] shadow1 w-full justify-center items-center flex-col gap-2 bg-blue-100 p-7 rounded-md'>
+                    </motion.div>
+                    <motion.div 
+                    initial={{ x: 100, opacity: 0 }}  
+                    animate={{ x: 0, opacity: 1 }}    
+                    transition={{ duration: 0.6, ease: "easeOut" }}
+                    className='flex lg:w-[25%] shadow1 w-full justify-center items-center flex-col gap-2 bg-blue-100 p-7 rounded-md'>
                         <div className='border-[.7rem] border-gray-300 rounded-full p-3 hover:border-yellow-500 transition-all duration-200 cursor-pointer'>
                             <img className='w-[5rem]' src={badge} alt="" />
                         </div>
                         <p className='text-lg font-semibold'>App of the day</p>
-                    </div>
+                    </motion.div>
                 </div>
             </div>
 
 
             <div className='flex mb-[6rem] justify-center items-center'>
                 <div className='flex flex-col lg:flex-row  justify-center items-center w-[80%] gap-10'>
-                    <div className='lg:w-[40%] w-full shadow1 rounded-md p-10 flex flex-row justify-between items-center gap-1'>
+                    <motion.div
+                    initial={{ x: -100, opacity: 0 }}  
+                    animate={{ x: 0, opacity: 1 }}    
+                    transition={{ duration: 0.6, ease: "easeOut" }}
+                    className='lg:w-[40%] w-full shadow1 rounded-md p-10 flex flex-row justify-between items-center gap-1'>
                         <div className='flex justify-center items-center flex-col gap-2 '>
                             <p className='border-b-2 border-red-300 text-lg font-semibold text-gray-500'>Food</p>
                             <img src={food} className='w-[5rem]' alt="" />
@@ -114,11 +130,15 @@ function LandingPage() {
                         </div>
                         
                         
-                    </div>
-                    <div className='lg:w-[40%] w-full  gap-3 flex flex-col'>
+                    </motion.div>
+                    <motion.div
+                    initial={{ x: 100, opacity: 0 }}  
+                    animate={{ x: 0, opacity: 1 }}    
+                    transition={{ duration: 0.6, ease: "easeOut" }}
+                    className='lg:w-[40%] w-full  gap-3 flex flex-col'>
                         <h1 className='text-3xl font-semibold'>Quick & Simple Money Tracker</h1>
                         <p className='text-md text-gray-500'>Record your daily transactions in seconds! Easily categorize them with clear visuals—like Expenses for Food and Shopping, or Income from Salary and Gifts.</p>
-                    </div>
+                    </motion.div>
                 </div>
             </div>
 
