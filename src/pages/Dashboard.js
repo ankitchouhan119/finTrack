@@ -14,6 +14,7 @@ import { Modal } from 'antd';  // Import Ant Design Modal
 import { ExclamationCircleOutlined } from '@ant-design/icons'; // Import Ant Design Icon
 import Chart from '../components/Charts/charts';
 import NoTransaction from '../components/NoTransaction/noTransaction';
+import LoginFirst from './LoginFirst';
 
 function Dashboard() {
 
@@ -229,7 +230,7 @@ function Dashboard() {
           )}
         </div>
       ) : (
-        <p>Login First</p>
+        <LoginFirst/>
       )}
     </>
   );
