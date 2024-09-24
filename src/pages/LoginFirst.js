@@ -2,6 +2,7 @@ import React from 'react'
 import Header from '../components/Header'
 import { useNavigate } from 'react-router-dom'
 import loginFirst from '../../src/components/assets/loginFirst.jpg'
+import Footer from '../components/Footer/footer';
 
 function LoginFirst() {
     const navigate = useNavigate();
@@ -21,6 +22,7 @@ function LoginFirst() {
                     Login
                 </button>
             </div>
+            <Footer/>
 
         </div>
     )
