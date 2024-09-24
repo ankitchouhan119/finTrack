@@ -127,7 +127,7 @@ function SignUpSignIn() {
 
       }
     } else {
-      toast.error("Doc already exists")
+      // toast.error("Doc already exists")
       setLoading(false);
     }
   }

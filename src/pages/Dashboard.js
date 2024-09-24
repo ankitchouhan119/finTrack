@@ -5,13 +5,13 @@ import { useNavigate } from 'react-router-dom';
 import AddExpenseModal from "../components/Modals/AddExpense";
 import AddIncomeModal from "../components/Modals/AddIncome";
 import { useAuthState } from 'react-firebase-hooks/auth';
-import { addDoc, collection, getDocs, query, deleteDoc, doc } from 'firebase/firestore';
+import { addDoc, collection, getDocs, query, deleteDoc, doc, getDoc } from 'firebase/firestore';
 import { auth, db } from '../firebase';
 import { toast } from 'react-toastify';
 import TransactionsTable from '../components/TransactionsTable/table';
 import { HomeIcon } from '@heroicons/react/16/solid';
-import { Modal } from 'antd';  // Import Ant Design Modal
-import { ExclamationCircleOutlined } from '@ant-design/icons'; // Import Ant Design Icon
+import { Modal } from 'antd';  
+import { ExclamationCircleOutlined } from '@ant-design/icons';
 import Chart from '../components/Charts/charts';
 import NoTransaction from '../components/NoTransaction/noTransaction';
 import LoginFirst from './LoginFirst';
@@ -21,6 +21,7 @@ function Dashboard() {
   const [loading, setLoading] = useState(false);
   const [transactions, setTransactions] = useState([]);
   const [user] = useAuthState(auth);
+  const [username, setUsername] = useState("");
   const navigate = useNavigate();
   const [isExpenseModalVisible, setIsExpenseModalVisible] = useState(false);
   const [isIncomeModalVisible, setIsIncomeModalVisible] = useState(false);
@@ -56,6 +57,24 @@ function Dashboard() {
       toast.error("Couldn't add Transaction");
     }
   }
+
+  // Fetch user data including username from Firestore
+  useEffect(() => {
+    const fetchUserData = async () => {
+      if (user) {
+        const userRef = doc(db, "users", user.uid);
+        const userData = await getDoc(userRef);
+
+        if (userData.exists()) {
+          setUsername(userData.data().name); // Set the username from Firestore
+        } else {
+          toast.error("User data not found!");
+        }
+      }
+    };
+
+    fetchUserData();
+  }, [user]);
 
   useEffect(() => {
     fetchTransactions();
@@ -189,14 +208,22 @@ function Dashboard() {
             </div>
           ) : (
             <>
-              <div className='w-[95%] flex justify-end'>
-                <button
-                  onClick={landingPage}
-                  className='border-2 border-blue-500 rounded-lg text-gray-500 p-1 mt-3 ml-6 rounded-sm hover:text-white hover:bg-blue-500 transition-all duration-200'
-                >
-                  <HomeIcon className="w-5 h-5 transition-all duration-100" />
-                </button>
+              <div className='w-[95%] flex justify-center items-center flex-col mt-5'>
+                <div className='w-[95%] gap-2 flex justify-center items-center flex-col mt-5'>
+                  <p className='lg:text-4xl text-center text-2xl text-gray-500'> Welcome To Your Dashboard,</p>
+                  <p className='lg:text-4xl text-center font-semibold text-2xl text-blue-500'>{username}</p>
+                </div>
+                <div className='w-[95%] flex justify-end'>
+
+                  <button
+                    onClick={landingPage}
+                    className='border-2 border-blue-500 rounded-lg text-gray-500 p-1 mt-3 ml-6 rounded-sm hover:text-white hover:bg-blue-500 transition-all duration-200'
+                  >
+                    <HomeIcon className="w-5 h-5 transition-all duration-100" />
+                  </button>
+                </div>
               </div>
+
 
               <Cards
                 income={income}
@@ -222,7 +249,7 @@ function Dashboard() {
                 </div>
               ) : (
                 <div className='lg:block md:block'>
-                  <NoTransaction/>
+                  <NoTransaction />
                 </div>
               )}
               <TransactionsTable transactions={transactions} />
@@ -230,7 +257,7 @@ function Dashboard() {
           )}
         </div>
       ) : (
-        <LoginFirst/>
+        <LoginFirst />
       )}
     </>
   );

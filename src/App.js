@@ -7,6 +7,7 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import LandingPage from './pages/LandingPage';
 import LoginFirst from './pages/LoginFirst';
+import Profile from './components/Profile/profile';
 
 function App() {
   return (
@@ -18,6 +19,7 @@ function App() {
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/" element={<LandingPage />} />
           <Route path="/loginFirst" element={<LoginFirst />} />
+          <Route path="/profile" element={<Profile />} />
           
         </Routes>
       </Router>
