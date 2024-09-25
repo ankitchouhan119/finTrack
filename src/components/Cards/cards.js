@@ -10,7 +10,8 @@ function Cards({ showExpenseModal, showIncomeModal, income, expense, totalBalanc
             <Row className="my-row grid grid-cols-1 md:grid-cols-3 gap-4 justify-between items-center w-[90%] mx-auto my-[1rem]">
                 <Card className="my-card m-[2rem] rounded-sm" title="Current Balance">
                     <p className="m-0">₹{formatAmount(totalBalance)}</p>
-                    <Button text="Reset Balance" blue={true} onClick={resetBalance} />
+                    {/* <Button text="Reset Balance" blue={false} onClick={resetBalance} /> */}
+                    <button className='btn-red' onClick={resetBalance}>Reset Balance</button>
                 </Card>
                 <Card className="my-card m-[2rem] rounded-sm" title="Total Income">
                     <p className="m-0">₹{formatAmount(income)}</p>

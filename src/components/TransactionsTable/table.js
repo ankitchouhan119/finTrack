@@ -3,9 +3,10 @@ import { Radio, Select, Table } from 'antd';
 import { Option } from 'antd/es/mentions';
 import React, { useState } from 'react'
 import Button from '../Button/button';
-import { unparse } from 'papaparse';
+import { parse, unparse } from 'papaparse';
+import { toast } from 'react-toastify';
 
-function TransactionsTable({ transactions }) {
+function TransactionsTable({ transactions, addTransaction, fetchTransactions }) {
     const [search, setSearch] = useState('');
     const [typeFilter, setTypeFilter] = useState('');
     const [sortKey, setSortKey] = useState('');
@@ -41,13 +42,13 @@ function TransactionsTable({ transactions }) {
 
     let sortedTransactions = filteredTransactions.sort((a, b) => {
         if (sortKey === "date") {
-            return new Date(a.date) - new Date(b.date);
+            return new Date(b.date) - new Date(a.date);
         } else if (sortKey === "amount") {
             return a.amount - b.amount;
         } else {
             return 0;
         }
-    })
+    });
 
 
     function exportCSV() {
@@ -65,17 +66,39 @@ function TransactionsTable({ transactions }) {
         document.body.removeChild(link);
     }
 
-    function importCSV() {
-
+    function importCSV(event) {
+        event.preventDefault();
+        const file = event.target.files[0];
+        if (!file) {
+            toast.error("Please select a file to import.");
+            return;
+        }
+    
+        parse(file, {
+            header: true,
+            complete: async (results) => {
+                const transactionsToAdd = results.data.map((transaction) => ({
+                    ...transaction,
+                    amount: parseFloat(transaction.amount),
+                }));
+    
+                // Add each transaction
+                for (const transaction of transactionsToAdd) {
+                    await addTransaction(transaction, true);
+                }
+    
+                toast.success("Transactions Added!");
+                fetchTransactions(); // Fetch transactions after importing
+            },
+            error: (error) => {
+                console.error("Error parsing CSV: ", error);
+                toast.error("Failed to import CSV.");
+            }
+        });
     }
 
     return (
         <>
-            {/* <input 
-    value={search} 
-    onChange={(e)=> setSearch(e.target.value)}
-    placeholder='Search by Tag'
-     /> */}
             <div className="relative flex items-center m-3 gap-2 w-[95%]">
                 <MagnifyingGlassIcon className="absolute left-3 w-5 h-5 text-gray-500" />
                 <input
@@ -121,6 +144,20 @@ function TransactionsTable({ transactions }) {
                         text={"Export to CSV"} onClick={exportCSV} />
                     {/* <Button
                         text={"Import CSV"} blue={true} onClick={importCSV} /> */}
+                    <label htmlFor="csv-import" className="w-full">
+                        <Button
+                            text={"Import CSV"}
+                            blue={true}
+                            onClick={() => document.getElementById('csv-import').click()}
+                        />
+                        <input
+                            id="csv-import"
+                            type="file"
+                            accept=".csv"
+                            className="hidden"
+                            onChange={importCSV}
+                        />
+                    </label>
                 </div>
             </div>
             <div className='w-full flex justify-center items-center'>

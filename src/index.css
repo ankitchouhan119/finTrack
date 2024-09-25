@@ -30,3 +30,32 @@ input{
 .shadow1{
   box-shadow: var(--shadow-color);
 }
+
+.btn-red{
+  color: var(--theme);
+  text-align: center;
+  width: 100%;
+  font-size: .8rem;
+  margin:1rem 0rem;
+  padding: 0.5rem !important;
+  background-color: #ef4444;
+  border: 1px solid #ef4444;
+  border-radius: 0.25rem;
+  cursor: pointer;
+  display: flex !important;
+  align-items: center;
+  justify-content: center;
+  height: auto !important;
+}
+
+
+.btn-red{
+  background-color: #ef4444;
+  color: var(--white);
+}
+
+.btn-red:hover{
+  background-color: #fff !important;
+  color: #ef4444 !important;
+  transition: all 0.3s;
+}

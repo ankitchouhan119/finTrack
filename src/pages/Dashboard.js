@@ -15,6 +15,7 @@ import { ExclamationCircleOutlined } from '@ant-design/icons';
 import Chart from '../components/Charts/charts';
 import NoTransaction from '../components/NoTransaction/noTransaction';
 import LoginFirst from './LoginFirst';
+import { parse } from 'papaparse';
 
 function Dashboard() {
 
@@ -121,7 +122,7 @@ function Dashboard() {
   const downloadCSV = (transactions) => {
     if (!transactions.length) return;
 
-    const headers = ["Type", "Date", "Amount", "Tag"];
+    const headers = ["type", "date", "amount", "tag"];
     const rows = transactions.map(transaction => [
       transaction.type,
       transaction.date,
@@ -197,6 +198,10 @@ function Dashboard() {
   let sortedTransactions = transactions.sort((a, b) => {
     return new Date(a.date) - new Date(b.date);
   })
+
+ 
+
+
   return (
     <>
       {user ? (
@@ -252,7 +257,7 @@ function Dashboard() {
                   <NoTransaction />
                 </div>
               )}
-              <TransactionsTable transactions={transactions} />
+              <TransactionsTable transactions={transactions} addTransaction={addTransaction} fetchTransactions={fetchTransactions}/>
             </>
           )}
         </div>
