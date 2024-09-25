@@ -29,7 +29,21 @@ FinTrack is a finance tracking web application that allows users to manage their
 5. **Data Storage:** Transactions are stored securely in Firebase Firestore.
 
 6. **State Management:** Seamless state management across the app with React's context API.
+   
+7. **Update Profile:** User can update profile after SignUp.
 
+
+## Hosted Link
+You can access the live application here:
+
+🔗 **[FinTrack Live](https://fin-track-lovat.vercel.app/)**
+
+**Test Credentials**
+
+You can use the following credentials to log in and explore the application:
+
+- **Email**: `test@gmail.com`
+- **Password**: `123456`
 
 ## Prerequisites
 
