@@ -77,6 +77,7 @@ Step-by-step instructions on how to congifure the project locally.
 
 1. Make an .env file and config with your own variables and key:
    ```bash
+   REACT_APP_API_URL=http://localhost:5000
    REACT_APP_API_KEY= your-api-key
    REACT_APP_AUTH_DOMAIN= your-auth-domain
    REACT_APP_PROJECT_ID= your-project-id
@@ -126,7 +127,7 @@ You can contact me with
 
 Linkedin Id :  [Ankit Chouhan](https://www.linkedin.com/in/ankit-chouhan-b41a87206/)
 
-Email :  [shankit119@gmail.com](mailto:shankit119@gmail.com)
+Email :  [ankit.chouhan.0207@gmail.com](mailto:ankit.chouhan.0207@gmail.com)
 
 
 
