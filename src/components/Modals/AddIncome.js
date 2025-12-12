@@ -1,14 +1,9 @@
-import React from "react";
 import {
-  Card,
-  Col,
-  Row,
   Button,
   Modal,
   Form,
   Input,
   DatePicker,
-  Select,
 } from "antd";
 
 function AddIncomeModal({
@@ -21,7 +16,7 @@ function AddIncomeModal({
     <Modal
       style={{ fontWeight: 600 }}
       title="Add Income"
-      visible={isIncomeModalVisible}
+      open={isIncomeModalVisible}
       onCancel={handleIncomeCancel}
       footer={null}
     >
@@ -64,7 +59,7 @@ function AddIncomeModal({
             { required: true, message: "Please select the income date!" },
           ]}
         >
-          <DatePicker format="DD-MM-YYYY" className="custom-input" />
+          <DatePicker format="DD-MM-YYYY" className="custom-input" disabledDate={(current) => current && current > new Date().setHours(0, 0, 0, 0)}/>
         </Form.Item>
         {/* <Form.Item
           style={{ fontWeight: 600 }}

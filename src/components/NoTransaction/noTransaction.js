@@ -1,4 +1,3 @@
-import React from 'react'
 import noTransaction from '../../components/assets/No.png'
 
 function NoTransaction() {

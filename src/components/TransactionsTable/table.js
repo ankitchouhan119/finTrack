@@ -1,43 +1,25 @@
 import { MagnifyingGlassIcon } from '@heroicons/react/16/solid';
 import { Radio, Select, Table } from 'antd';
 import { Option } from 'antd/es/mentions';
-import React, { useState } from 'react'
+import { useState } from 'react'
 import Button from '../Button/button';
-import { parse, unparse } from 'papaparse';
+import { parse } from 'papaparse';
 import { toast } from 'react-toastify';
+import { apiFetch } from '../../utils/api';
 
 function TransactionsTable({ transactions, addTransaction, fetchTransactions }) {
     const [search, setSearch] = useState('');
     const [typeFilter, setTypeFilter] = useState('');
     const [sortKey, setSortKey] = useState('');
     const columns = [
-
-        {
-            title: 'Tag',
-            dataIndex: 'tag',
-            key: 'tag',
-        },
-
-        {
-            title: 'Amount',
-            dataIndex: 'amount',
-            key: 'amount',
-        },
-
-        {
-            title: 'Type',
-            dataIndex: 'type',
-            key: 'type',
-        },
-        {
-            title: 'Date',
-            dataIndex: 'date',
-            key: 'date',
-        },
+        { title: 'Tag', dataIndex: 'tag', key: 'tag' },
+        { title: 'Amount', dataIndex: 'amount', key: 'amount' },
+        { title: 'Type', dataIndex: 'type', key: 'type' },
+        { title: 'Date', dataIndex: 'date', key: 'date' },
     ];
 
-    let filteredTransactions = transactions.filter((item) =>
-        item.tag.toLowerCase().includes(search.toLowerCase()) && item.type.includes(typeFilter)
+    let filteredTransactions = (transactions || []).filter((item) =>
+        (item.tag || "").toLowerCase().includes(search.toLowerCase()) && item.type.includes(typeFilter)
     );
 
     let sortedTransactions = filteredTransactions.sort((a, b) => {
@@ -50,20 +32,29 @@ function TransactionsTable({ transactions, addTransaction, fetchTransactions }) 
         }
     });
 
-
-    function exportCSV() {
-        var csv = unparse({
-            fields: ["tag", "amount", "type", "date"],
-            data: transactions,
-        });
-        const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
-        const url = URL.createObjectURL(blob);
-        const link = document.createElement("a");
-        link.href = url;
-        link.download = "transaction.csv";
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
+    async function exportCSV() {
+        try {
+            const res = await apiFetch("/api/transactions/export");
+            // apiFetch returns Response object when content-type not json
+            // but in our wrapper it returns res (for non-json). handle both:
+            if (res instanceof Response) {
+                const blob = await res.blob();
+                const url = window.URL.createObjectURL(blob);
+                const link = document.createElement("a");
+                link.href = url;
+                link.download = "transactions.csv";
+                document.body.appendChild(link);
+                link.click();
+                link.remove();
+                window.URL.revokeObjectURL(url);
+                toast.success("CSV downloaded");
+            } else {
+                toast.info("No transactions to export.");
+            }
+        } catch (e) {
+            console.error("Export error:", e);
+            toast.error("Export failed");
+        }
     }
 
     function importCSV(event) {
@@ -81,14 +72,18 @@ function TransactionsTable({ transactions, addTransaction, fetchTransactions }) 
                     ...transaction,
                     amount: parseFloat(transaction.amount),
                 }));
-    
-                // Add each transaction
-                for (const transaction of transactionsToAdd) {
-                    await addTransaction(transaction, true);
+
+                try {
+                    await apiFetch("/api/transactions/import", {
+                        method: "POST",
+                        body: JSON.stringify({ transactions: transactionsToAdd })
+                    });
+                    toast.success("Transactions Added!");
+                    fetchTransactions();
+                } catch (e) {
+                    console.error("Import error:", e);
+                    toast.error("Failed to import CSV.");
                 }
-    
-                toast.success("Transactions Added!");
-                fetchTransactions(); // Fetch transactions after importing
             },
             error: (error) => {
                 console.error("Error parsing CSV: ", error);
@@ -122,11 +117,9 @@ function TransactionsTable({ transactions, addTransaction, fetchTransactions }) 
             </div>
             <div className='flex items-center justify-between flex-col lg:flex-row  m-3  w-[95%]'>
                 <div className='m-[1rem]'>
-
                     <h1 className='text-xl lg:text-2xl font-semibold'>My Transactions</h1>
                 </div>
                 <div className='m-[1rem]'>
-
                     <Radio.Group
                         className='input-radio'
                         onChange={(e) => setSortKey(e.target.value)}
@@ -135,15 +128,10 @@ function TransactionsTable({ transactions, addTransaction, fetchTransactions }) 
                         <Radio.Button value="">No Sort</Radio.Button>
                         <Radio.Button value="date">Sort By Date</Radio.Button>
                         <Radio.Button value="amount">Sort By Amount</Radio.Button>
-
                     </Radio.Group>
                 </div>
                 <div className='flex flex-row gap-2 lg:w-[20%] w-[90%] items-center'>
-
-                    <Button
-                        text={"Export to CSV"} onClick={exportCSV} />
-                    {/* <Button
-                        text={"Import CSV"} blue={true} onClick={importCSV} /> */}
+                    <Button text={"Export to CSV"} onClick={exportCSV} />
                     <label htmlFor="csv-import" className="w-full">
                         <Button
                             text={"Import CSV"}
@@ -161,14 +149,12 @@ function TransactionsTable({ transactions, addTransaction, fetchTransactions }) 
                 </div>
             </div>
             <div className='w-full flex justify-center items-center'>
-
                 <div className=' w-[90%]'>
-
-                    <Table className=' my-1' dataSource={filteredTransactions} columns={columns} />
+                    <Table className=' my-1' dataSource={sortedTransactions} columns={columns} />
                 </div>
             </div>
         </>
     )
 }
 
-export default TransactionsTable
+export default TransactionsTable;

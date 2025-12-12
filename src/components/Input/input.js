@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import './style.css';
 import { EyeIcon, EyeSlashIcon } from '@heroicons/react/16/solid';
 

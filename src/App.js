@@ -1,9 +1,7 @@
-
 import { Route, BrowserRouter as Router, Routes } from 'react-router-dom';
-import './App.css';
 import Dashboard from './pages/Dashboard';
 import Signup from './pages/Signup';
-import { ToastContainer, toast } from 'react-toastify';
+import { ToastContainer} from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import LandingPage from './pages/LandingPage';
 import LoginFirst from './pages/LoginFirst';

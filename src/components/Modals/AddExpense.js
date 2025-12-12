@@ -1,14 +1,9 @@
-import React from "react";
 import {
-  Card,
-  Col,
-  Row,
   Button,
   Modal,
   Form,
   Input,
   DatePicker,
-  Select,
 } from "antd";
 function AddExpenseModal({
   isExpenseModalVisible,
@@ -20,7 +15,7 @@ function AddExpenseModal({
     <Modal
       style={{ fontWeight: 600 }}
       title="Add Expense"
-      visible={isExpenseModalVisible}
+      open={isExpenseModalVisible}
       onCancel={handleExpenseCancel}
       footer={null}
     >
@@ -63,7 +58,7 @@ function AddExpenseModal({
             { required: true, message: "Please select the expense date!" },
           ]}
         >
-          <DatePicker className="custom-input" format="DD-MM-YYYY" />
+          <DatePicker className="custom-input" format="DD-MM-YYYY" disabledDate={(current) => current && current > new Date().setHours(0, 0, 0, 0)}/>
         </Form.Item>
         {/* <Form.Item
           label="Tag"

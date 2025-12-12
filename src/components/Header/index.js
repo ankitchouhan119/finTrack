@@ -1,46 +1,41 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import './style.css';
-import { auth, db, doc } from '../../firebase';
+import { auth } from '../../firebase';
 import { useAuthState } from "react-firebase-hooks/auth";
 import { useNavigate } from 'react-router-dom';
 import { signOut, updateProfile } from 'firebase/auth';
 import { toast } from 'react-toastify';
 import userImg from '../../components/assets/profile.png';
 import { Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/react';
-import { getDoc } from 'firebase/firestore';
+import { apiFetch } from '../../utils/api';
 
 function Header() {
-    const [user] = useAuthState(auth); // Firebase auth user
-    const [userData, setUserData] = useState({}); // Firestore user data
-    const [photoUrl, setPhotoUrl] = useState(user?.photoURL || userImg); // State for profile photo
+    const [user] = useAuthState(auth);
+    const [userData, setUserData] = useState({});
+    const [photoUrl, setPhotoUrl] = useState(user?.photoURL || userImg);
     const navigate = useNavigate();
 
-    // Fetch user data from Firestore
     useEffect(() => {
         const fetchUserData = async () => {
             if (user) {
-                const userRef = doc(db, 'users', user.uid);
-                const userSnapshot = await getDoc(userRef);
-
-                if (userSnapshot.exists()) {
-                    const userInfo = userSnapshot.data();
-                    setUserData(userInfo);
-
-                    // If Firestore has a different photoURL, update it
-                    if (userInfo.photoURL && userInfo.photoURL !== user.photoURL) {
-                        // Update Firebase auth profile with the new photoURL
-                        await updateProfile(user, { photoURL: userInfo.photoURL });
-                        setPhotoUrl(userInfo.photoURL); // Update the displayed photo
-                        toast.success("Profile photo updated!");
+                try {
+                    const data = await apiFetch("/api/users/profile");
+                    setUserData(data || {});
+                    if (data?.photoURL && data.photoURL !== user.photoURL) {
+                        try {
+                            await updateProfile(user, { photoURL: data.photoURL });
+                        } catch (_) { /* ignore updateProfile failures */ }
+                        setPhotoUrl(data.photoURL);
+                    } else {
+                        setPhotoUrl(user.photoURL || userImg);
                     }
-                } else {
-                    toast.error('No user data found!');
+                } catch (e) {
+                    console.error("Header fetch user:", e);
                 }
             }
         };
-
         fetchUserData();
-    }, [user]); // Dependency on the user state
+    }, [user]);
 
     function logoutFunc() {
         try {
@@ -80,7 +75,6 @@ function Header() {
 
             {user ? (
                 <div className='logout link font-medium text-xl m-0 text-white flex justify-start items-center py-3 gap-2 mr-5'>
-                    {/* Profile dropdown */}
                     <Menu as="div">
                         <div>
                             <MenuButton>
@@ -91,19 +85,12 @@ function Header() {
                                 />
                             </MenuButton>
                         </div>
-                        <MenuItems
-                            transition
-                            className="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 transition focus:outline-none data-[closed]:scale-95 data-[closed]:transform data-[closed]:opacity-0 data-[enter]:duration-100 data-[leave]:duration-75 data-[enter]:ease-out data-[leave]:ease-in"
-                        >
+                        <MenuItems className="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5">
                             <MenuItem>
-                                <a onClick={profile} className="block px-4 py-2 text-sm text-gray-700 data-[focus]:bg-gray-100">
-                                    Your Profile
-                                </a>
+                                <a onClick={profile} className="block px-4 py-2 text-sm text-gray-700">Your Profile</a>
                             </MenuItem>
                             <MenuItem>
-                                <a onClick={logoutFunc} className="block px-4 py-2 text-sm text-gray-700 data-[focus]:bg-gray-100">
-                                    Sign out
-                                </a>
+                                <a onClick={logoutFunc} className="block px-4 py-2 text-sm text-gray-700">Sign out</a>
                             </MenuItem>
                         </MenuItems>
                     </Menu>
