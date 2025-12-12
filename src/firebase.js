@@ -1,10 +1,5 @@
 import { initializeApp } from "firebase/app";
-import { getAnalytics } from "firebase/analytics";
 import { getAuth, GoogleAuthProvider, FacebookAuthProvider } from "firebase/auth";
-import { getFirestore, doc, setDoc } from "firebase/firestore";
-import { getStorage } from "firebase/storage"; // Import the storage module
-
-// console.log("environment1", process.env.REACT_APP_API_KEY)
 
 const firebaseConfig = {
   apiKey: process.env.REACT_APP_API_KEY,
@@ -16,13 +11,9 @@ const firebaseConfig = {
   measurementId: process.env.REACT_APP_MEASUREMENT_ID
 };
 
-// Initialize Firebase
 const app = initializeApp(firebaseConfig);
-const analytics = getAnalytics(app);
-const db = getFirestore(app);
 const auth = getAuth(app);
 const provider = new GoogleAuthProvider();
-const provider1 =  new FacebookAuthProvider();
-const storage = getStorage(app); // Initialize storage
+const provider1 = new FacebookAuthProvider();
 
-export {db, auth, provider,provider1, doc, setDoc, storage }
+export { auth, provider, provider1 };

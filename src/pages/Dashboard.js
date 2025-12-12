@@ -1,12 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import Header from '../components/Header';
 import Cards from '../components/Cards/cards';
 import { useNavigate } from 'react-router-dom';
 import AddExpenseModal from "../components/Modals/AddExpense";
 import AddIncomeModal from "../components/Modals/AddIncome";
 import { useAuthState } from 'react-firebase-hooks/auth';
-import { addDoc, collection, getDocs, query, deleteDoc, doc, getDoc } from 'firebase/firestore';
-import { auth, db } from '../firebase';
+import { auth } from '../firebase';
 import { toast } from 'react-toastify';
 import TransactionsTable from '../components/TransactionsTable/table';
 import { HomeIcon } from '@heroicons/react/16/solid';
@@ -15,7 +14,7 @@ import { ExclamationCircleOutlined } from '@ant-design/icons';
 import Chart from '../components/Charts/charts';
 import NoTransaction from '../components/NoTransaction/noTransaction';
 import LoginFirst from './LoginFirst';
-import { parse } from 'papaparse';
+import { apiFetch } from '../utils/api';
 
 function Dashboard() {
 
@@ -47,52 +46,51 @@ function Dashboard() {
   };
 
   async function addTransaction(transaction) {
-    if (!user) return toast.error("User not authenticated");
+    if (!auth.currentUser) return toast.error("User not authenticated");
     try {
-      const docRef = await addDoc(collection(db, `users/${user.uid}/transactions`), transaction);
-      console.log("Document written with ID:", docRef.id);
+      await apiFetch("/api/transactions/add", {
+        method: "POST",
+        body: JSON.stringify({ transaction })
+      });
       toast.success("Transaction Added!");
-      fetchTransactions();  // Fetch transactions after adding new transaction
+      fetchTransactions();  // refresh
     } catch (e) {
-      console.error("Error adding document: ", e);
+      console.error("Error adding transaction:", e);
       toast.error("Couldn't add Transaction");
     }
   }
 
-  // Fetch user data including username from Firestore
+  // Fetch user data (via backend)
   useEffect(() => {
     const fetchUserData = async () => {
-      if (user) {
-        const userRef = doc(db, "users", user.uid);
-        const userData = await getDoc(userRef);
-
-        if (userData.exists()) {
-          setUsername(userData.data().name); // Set the username from Firestore
-        } else {
+      if (auth.currentUser) {
+        try {
+          const data = await apiFetch("/api/users/profile");
+          setUsername(data.name || "");
+        } catch (e) {
+          console.error(e);
           toast.error("User data not found!");
         }
       }
     };
-
     fetchUserData();
   }, [user]);
 
   useEffect(() => {
     fetchTransactions();
-  }, [user]);  // Fetch transactions when the user is set
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [user]);
 
   async function fetchTransactions() {
     setLoading(true);
-    if (user) {
-      const q = query(collection(db, `users/${user.uid}/transactions`));
-      const querySnapshot = await getDocs(q);
-      let transactionArray = [];
-      querySnapshot.forEach((doc) => {
-        transactionArray.push(doc.data());
-      });
-      setTransactions(transactionArray);
-      console.log("transactionArray", transactionArray);
-      // toast.success("Transaction Fetched!");
+    if (auth.currentUser) {
+      try {
+        const data = await apiFetch("/api/transactions/all");
+        setTransactions(Array.isArray(data) ? data : []);
+      } catch (e) {
+        console.error("Fetch transactions error:", e);
+        toast.error("Couldn't fetch transactions");
+      }
     }
     setLoading(false);
   }
@@ -107,9 +105,9 @@ function Dashboard() {
 
     transactions.forEach((transaction) => {
       if (transaction.type === "income") {
-        incomeTotal += transaction.amount;
+        incomeTotal += Number(transaction.amount || 0);
       } else {
-        expensesTotal += transaction.amount;
+        expensesTotal += Number(transaction.amount || 0);
       }
     });
 
@@ -118,61 +116,46 @@ function Dashboard() {
     setTotalBalance(incomeTotal - expensesTotal);
   };
 
-  // Function to download CSV before resetting
-  const downloadCSV = (transactions) => {
-    if (!transactions.length) return;
-
-    const headers = ["type", "date", "amount", "tag"];
-    const rows = transactions.map(transaction => [
-      transaction.type,
-      transaction.date,
-      transaction.amount,
-      transaction.tag
-    ]);
-
-    const csvContent = [
-      headers.join(","),
-      ...rows.map(row => row.join(","))
-    ].join("\n");
-
-    const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
-    const url = URL.createObjectURL(blob);
-    const link = document.createElement("a");
-    link.href = url;
-    link.setAttribute("download", "transactions.csv");
-
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
+  // Download CSV from server
+  const downloadCSVFromServer = async () => {
+    if (!auth.currentUser) return toast.error("User not authenticated");
+    try {
+      const token = await auth.currentUser.getIdToken();
+      const response = await fetch(`${process.env.REACT_APP_API_URL || "http://localhost:5000"}/api/transactions/export`, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      if (!response.ok) throw new Error("Export failed");
+      const blob = await response.blob();
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "transactions.csv";
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      window.URL.revokeObjectURL(url);
+      toast.success("CSV downloaded");
+    } catch (e) {
+      console.error("Export error:", e);
+      toast.error("Export failed");
+    }
   };
 
-  // Function to delete all transactions
+  // Delete all transactions
   const resetBalance = async () => {
-    if (!user) return toast.error("User not authenticated");
-
+    if (!auth.currentUser) return toast.error("User not authenticated");
     try {
-      const q = query(collection(db, `users/${user.uid}/transactions`));
-      const querySnapshot = await getDocs(q);
-
-      const deletePromises = querySnapshot.docs.map(docSnap => deleteDoc(doc(db, `users/${user.uid}/transactions`, docSnap.id)));
-
-      await Promise.all(deletePromises);
+      await apiFetch("/api/transactions/delete-all", { method: "DELETE" });
       toast.success("All transactions have been deleted!");
-
-      // Reset the balance after deleting all transactions
-      setIncome(0);
-      setExpense(0);
-      setTotalBalance(0);
-
-      // Fetch transactions to refresh the state
+      setIncome(0); setExpense(0); setTotalBalance(0);
       fetchTransactions();
     } catch (e) {
-      console.error("Error deleting transactions: ", e);
+      console.error("Error deleting transactions:", e);
       toast.error("Couldn't reset balance");
     }
   };
 
-  // Custom Modal Confirm
+  // Confirm modal triggers download then delete
   const showConfirm = () => {
     Modal.confirm({
       title: 'Please confirm',
@@ -180,13 +163,12 @@ function Dashboard() {
       content: 'Please download the CSV file for future reference. Click "Delete" to delete all transactions or "Cancel" to abort.',
       okText: 'Delete',
       cancelText: 'Cancel',
-      onOk() {
-        // Download CSV before deleting
-        downloadCSV(transactions);
-        resetBalance(); // Proceed with balance reset
+      async onOk() {
+        await downloadCSVFromServer();
+        await resetBalance();
       },
       onCancel() {
-        console.log('Cancelled');
+        // nothing
       },
     });
   };
@@ -195,12 +177,11 @@ function Dashboard() {
     navigate("/");
   }
 
-  let sortedTransactions = transactions.sort((a, b) => {
-    return new Date(a.date) - new Date(b.date);
-  })
-
- 
-
+  let sortedTransactions = [...transactions].sort((a, b) => {
+    const da = a.date?.split("-").reverse().join("-") || a.date;
+    const db = b.date?.split("-").reverse().join("-") || b.date;
+    return new Date(da) - new Date(db);
+  });
 
   return (
     <>
@@ -219,7 +200,6 @@ function Dashboard() {
                   <p className='lg:text-4xl text-center font-semibold text-2xl text-blue-500'>{username}</p>
                 </div>
                 <div className='w-[95%] flex justify-end'>
-
                   <button
                     onClick={landingPage}
                     className='border-2 border-blue-500 rounded-lg text-gray-500 p-1 mt-3 ml-6 rounded-sm hover:text-white hover:bg-blue-500 transition-all duration-200'
@@ -229,14 +209,13 @@ function Dashboard() {
                 </div>
               </div>
 
-
               <Cards
                 income={income}
                 expense={expense}
                 totalBalance={totalBalance}
                 showExpenseModal={showExpenseModal}
                 showIncomeModal={showIncomeModal}
-                resetBalance={showConfirm} // Use showConfirm to trigger modal
+                resetBalance={showConfirm}
               />
               <AddExpenseModal
                 isExpenseModalVisible={isExpenseModalVisible}

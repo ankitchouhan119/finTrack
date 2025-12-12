@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuthState } from "react-firebase-hooks/auth";
-import { auth, db, doc } from '../firebase';
+import { auth } from '../firebase';
 import Header from '../components/Header';
 import secure from '../components/assets/secure.png'
 import users from '../components/assets/Users.png'
@@ -17,38 +17,30 @@ import csv_imp from '../components/assets/csv_imp.png'
 import table from '../components/assets/table.png'
 import Footer from '../components/Footer/footer';
 import { motion } from 'framer-motion';
-import { username } from '../pages/Dashboard'
-import { getDoc } from 'firebase/firestore';
+import { apiFetch } from '../utils/api';
 import { toast } from 'react-toastify';
-
-
-
-
-
 
 function LandingPage() {
     const [username, setUsername] = useState("");
     const navigate = useNavigate();
-    const [user] = useAuthState(auth); // Get the user from firebase auth
+    const [user] = useAuthState(auth);
 
     function dashboard() {
         if (user) {
             navigate("/dashboard");
         } else {
-            navigate("/loginFirst"); // Redirect to signup if not logged in
+            navigate("/loginFirst");
         }
     }
 
-    // Fetch user data including username from Firestore
     useEffect(() => {
         const fetchUserData = async () => {
             if (user) {
-                const userRef = doc(db, "users", user.uid);
-                const userData = await getDoc(userRef);
-
-                if (userData.exists()) {
-                    setUsername(userData.data().name); // Set the username from Firestore
-                } else {
+                try {
+                    const data = await apiFetch("/api/users/profile");
+                    setUsername(data?.name || "");
+                } catch (e) {
+                    console.error(e);
                     toast.error("User data not found!");
                 }
             }

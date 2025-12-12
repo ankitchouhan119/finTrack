@@ -1,4 +1,3 @@
-import React from 'react'
 import Header from '../components/Header'
 import { useNavigate } from 'react-router-dom'
 import loginFirst from '../../src/components/assets/loginFirst.jpg'
