@@ -1,0 +1,77 @@
+name: UI-DEV
+
+env:
+  DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
+  DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
+  IMAGE_REPOSITORY_NAME: ${{ vars.IMAGE_REPOSITORY_NAME }}
+  IMAGE_NAME: ${{ vars.IMAGE_NAME }}
+
+
+on:
+#   push:
+#     branches:
+#       - 'k8s-deploy'
+
+  workflow_dispatch:
+    inputs:
+      branch:
+        description: Branch to build
+        required: true
+        default: k8s-deploy
+
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Clear Workspace
+        run: |
+          docker run --rm -v ${{ github.workspace }}:/app -w /app busybox \
+              sh -c """
+              ls -lrth
+              rm -rf * || true
+              rm -rf .* || true
+              """
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+        with:
+          ref: ${{ github.event.inputs.branch || github.ref_name }}
+      - name: Capture Short Commit_ID
+        id: commit
+        run: |
+          COMMIT_ID=$(git rev-parse --short=7 HEAD)
+          echo "COMMIT_ID=$COMMIT_ID" >> $GITHUB_ENV
+          echo "COMMIT_ID has been set to $COMMIT_ID"
+          echo $COMMIT_ID > commit-id.txt
+        shell: bash
+
+      - name: Upload commit ID as an artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: commit-id
+          path: commit-id.txt
+
+      - name: Build Docker Image
+        run: |-
+          sleep 30
+          cat Dockerfile
+          IMAGE_PATH=${IMAGE_REPOSITORY_NAME}/${IMAGE_NAME}
+          docker build -t ${IMAGE_PATH}:${COMMIT_ID} -f Dockerfile .
+          docker images | grep ${IMAGE_PATH} | grep ${COMMIT_ID}
+
+
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: $DOCKERHUB_USERNAME
+          password: $DOCKERHUB_TOKEN
+
+
+      - name: Push Docker Image
+        run: |-
+          IMAGE_PATH=${IMAGE_REPOSITORY_NAME}/${IMAGE_NAME}
+          IMAGE_FULL_NAME=${IMAGE_PATH}:${COMMIT_ID}
+          echo "$IMAGE_FULL_NAME"
+          docker push ${IMAGE_PATH}:${COMMIT_ID}
+          docker rmi ${IMAGE_PATH}:${COMMIT_ID}
