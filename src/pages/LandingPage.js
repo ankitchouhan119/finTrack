@@ -19,6 +19,7 @@ import Footer from '../components/Footer/footer';
 import { motion } from 'framer-motion';
 import { apiFetch } from '../utils/api';
 import { toast } from 'react-toastify';
+import { Helmet } from "react-helmet-async";
 
 function LandingPage() {
     const [username, setUsername] = useState("");
@@ -50,19 +51,42 @@ function LandingPage() {
     }, [user]);
 
     return (
+
         <div className=''>
+            <Helmet>
+                <title>FinTrack – Simple & Secure Expense Tracker</title>
+                <meta
+                    name="description"
+                    content="FinTrack is a simple and secure expense tracker to manage income, track expenses, analyze spending with charts, and export CSV reports."
+                />
+                <meta
+                    name="keywords"
+                    content="expense tracker, money manager, budget planner, personal finance app, income expense tracker"
+                />
+                <link rel="canonical" href="https://fintrack-119.web.app/" />
+
+                {/* Open Graph */}
+                <meta property="og:title" content="FinTrack – Expense & Budget Tracker" />
+                <meta
+                    property="og:description"
+                    content="Track expenses, manage budgets, analyze spending, and export CSV reports easily."
+                />
+                <meta property="og:type" content="website" />
+                <meta property="og:url" content="https://fintrack-119.web.app/" />
+            </Helmet>
+
             <Header />
             <div className='w-full lg:h-[60vh] h-[35vh] gap-4 flex justify-center items-center flex-col text-center'>
-                <motion.p
+                <motion.h1
                     initial={{ x: -100, opacity: 0 }}  // Starts off-screen above
                     animate={{ x: 0, opacity: 1 }}     // Slides to original position
                     transition={{ duration: 0.6, ease: "easeOut" }}
-                    className='lg:text-6xl text-4xl font-semibold text-blue-500'>Simplify Budgeting</motion.p>
-                <motion.p
+                    className='lg:text-6xl text-4xl font-semibold text-blue-500'>Simplify Budgeting</motion.h1>
+                <motion.h2
                     initial={{ x: 100, opacity: 0 }}
                     animate={{ x: 0, opacity: 1 }}
                     transition={{ duration: 0.6, ease: "easeOut" }}
-                    className='lg:text-6xl text-4xl text-gray-500'> with Easy <span className='font-semibold  text-blue-500'>Expense Tracking</span> </motion.p>
+                    className='lg:text-6xl text-4xl text-gray-500'> with Easy <span className='font-semibold  text-blue-500'>Expense Tracking</span> </motion.h2>
                 {user ? <button
 
                     onClick={dashboard}
@@ -89,7 +113,7 @@ function LandingPage() {
                         transition={{ duration: 0.6, ease: "easeOut" }}
                         className='flex justify-center shadow1 items-center w-full lg:w-[25%] flex-col gap-1 bg-blue-100 p-7 rounded-md'>
                         <div className='border-[.7rem] border-gray-300 rounded-full p-3 hover:border-blue-500 transition-all duration-200 cursor-pointer'>
-                            <img className='w-[5rem]' src={secure} alt="" />
+                            <img className='w-[5rem]' loading="lazy" src={secure} alt="Secure expense tracking" />
                         </div>
                         <p className='text-lg font-semibold'>100% Secured Data</p>
                     </motion.div>
@@ -99,9 +123,9 @@ function LandingPage() {
                         transition={{ duration: 0.6, ease: "easeOut" }}
                         className='flex lg:w-[25%] shadow1 w-full justify-center items-center flex-col gap-2 bg-blue-100 p-7 rounded-md'>
                         <div className='border-[.7rem] border-gray-300 rounded-full p-3 hover:border-sky-500 transition-all duration-200 cursor-pointer'>
-                            <img className='w-[5rem]' src={users} alt="" />
+                            <img className='w-[5rem]' loading="lazy" src={users} alt="Trusted personal finance app users" />
                         </div>
-                        <p className='text-lg font-semibold'>1 Million+ users</p>
+                        <p className='text-lg font-semibold'>Trusted by Thousands</p>
                     </motion.div>
                     <motion.div
                         initial={{ x: 100, opacity: 0 }}
@@ -109,9 +133,9 @@ function LandingPage() {
                         transition={{ duration: 0.6, ease: "easeOut" }}
                         className='flex lg:w-[25%] shadow1 w-full justify-center items-center flex-col gap-2 bg-blue-100 p-7 rounded-md'>
                         <div className='border-[.7rem] border-gray-300 rounded-full p-3 hover:border-indigo-500 transition-all duration-200 cursor-pointer'>
-                            <img className='w-[5rem]' src={review} alt="" />
+                            <img className='w-[5rem]' loading="lazy" src={review} alt="Highly rated expense tracking app" />
                         </div>
-                        <p className='text-lg font-semibold'>100K+ 5-star Reviews</p>
+                        <p className='text-lg font-semibold'>Highly Rated</p>
                     </motion.div>
                     <motion.div
                         initial={{ x: 100, opacity: 0 }}
@@ -119,7 +143,7 @@ function LandingPage() {
                         transition={{ duration: 0.6, ease: "easeOut" }}
                         className='flex lg:w-[25%] shadow1 w-full justify-center items-center flex-col gap-2 bg-blue-100 p-7 rounded-md'>
                         <div className='border-[.7rem] border-gray-300 rounded-full p-3 hover:border-yellow-500 transition-all duration-200 cursor-pointer'>
-                            <img className='w-[5rem]' src={badge} alt="" />
+                            <img className='w-[5rem]' loading="lazy" src={badge} alt="Award winning expense tracker" />
                         </div>
                         <p className='text-lg font-semibold'>App of the day</p>
                     </motion.div>
@@ -136,17 +160,17 @@ function LandingPage() {
                         className='lg:w-[40%] w-full shadow1 rounded-md p-10 flex flex-row justify-between items-center gap-1'>
                         <div className='flex justify-center items-center flex-col gap-2 '>
                             <p className='border-b-2 border-red-300 text-lg font-semibold text-gray-500'>Food</p>
-                            <img src={food} className='w-[5rem]' alt="" />
+                            <img src={food} className='w-[5rem]' alt="Food expense tracking" loading="lazy" />
                             <p>₹ 500</p>
                         </div>
                         <div className='flex justify-center items-center flex-col  '>
                             <p className='border-b-2 border-red-300 text-lg font-semibold text-gray-500'>Shop</p>
-                            <img src={shopping} className='w-[5rem]' alt="" />
+                            <img src={shopping} className='w-[5rem]' alt="Shopping expense tracking" loading="lazy" />
                             <p>₹ 1,200</p>
                         </div>
                         <div className='flex justify-center items-center flex-col gap-2'>
                             <p className='border-b-2 border-red-300 text-lg font-semibold text-gray-500'>Beverages</p>
-                            <img src={beverage} className='w-[5rem]' alt="" />
+                            <img src={beverage} className='w-[5rem]' alt="Beverage expense tracking" loading="lazy" />
                             <p>₹ 1,415</p>
                         </div>
 
@@ -175,12 +199,12 @@ function LandingPage() {
 
                         <div className='flex justify-center items-center flex-col gap-2 '>
                             <p className='border-b-2 border-red-300 text-lg font-semibold text-gray-500'>Transaction Analysis</p>
-                            <img src={graph} className='w-[80%]' alt="" />
+                            <img src={graph} className='w-[80%]' alt="Expense analysis graph" loading="lazy" />
 
                         </div>
                         <div className='flex justify-center items-center flex-col gap-2 '>
                             <p className='border-b-2 border-red-300 text-lg font-semibold text-gray-500'>Expenses</p>
-                            <img src={pie} className='w-[80%]' alt="" />
+                            <img src={pie} className='w-[80%]' alt="Expense distribution pie chart" loading="lazy" />
 
                         </div>
 
@@ -200,17 +224,17 @@ function LandingPage() {
 
                         <div className='flex justify-center items-center flex-col gap-2 '>
                             <p className='border-b-2 border-red-300 text-lg font-semibold text-gray-500'>CSV Export</p>
-                            <img src={csv_exp} className='w-[80%]' alt="" />
+                            <img src={csv_exp} className='w-[80%]' alt="Export expenses to CSV" loading="lazy" />
 
                         </div>
                         <div className='flex justify-center items-center flex-col gap-2 '>
                             <p className='border-b-2 border-red-300 text-lg font-semibold text-gray-500'>CSV Import</p>
-                            <img src={csv_imp} className='w-[80%]' alt="" />
+                            <img src={csv_imp} className='w-[80%]' alt="Import expenses from CSV" loading="lazy" />
 
                         </div>
                         <div className='flex justify-center items-center flex-col gap-2 '>
                             <p className='border-b-2 border-red-300 text-lg font-semibold text-gray-500'>Table</p>
-                            <img src={table} className='w-[80%]' alt="" />
+                            <img src={table} className='w-[80%]' alt="Expense data table view" loading="lazy" />
 
                         </div>
 
