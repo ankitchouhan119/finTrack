@@ -8,9 +8,9 @@ env:
 
 
 on:
-  push:
-    branches:
-      - 'k8s-deploy'
+#   push:
+#     branches:
+#       - 'k8s-deploy'
 
   workflow_dispatch:
     inputs:
