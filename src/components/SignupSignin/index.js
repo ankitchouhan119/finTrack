@@ -8,7 +8,7 @@ import { SocialIcon } from 'react-social-icons'
 import { createUserWithEmailAndPassword, signInWithPopup, signInWithEmailAndPassword } from "firebase/auth";
 import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
-// import { API_URL } from '../../utils/config';
+import { API_URL } from '../../utils/config';
 
 function SignUpSignIn() {
   const [name, setName] = useState("");
@@ -19,7 +19,8 @@ function SignUpSignIn() {
   const [loginForm, setLoginForm] = useState(true);
   const navigate = useNavigate();
 
-  const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000';
+  // const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000';
+  // const API_URL = getConfig("REACT_APP_API_URL") || "http://localhost:5000";
 
   function Login() {
     setLoading(true);

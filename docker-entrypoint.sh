@@ -1,12 +1,11 @@
 #!/bin/sh
 set -e
 
-echo "🚀 Generating runtime configuration from environment variables..."
+echo "🚀 Generating runtime config..."
 
-# Generate runtime config file that will be served by the app
-cat > /app/build/runtime-config.js <<EOF
+cat <<EOF > /app/build/runtime-config.js
 window._env_ = {
-  REACT_APP_API_URL: "${REACT_APP_API_URL:-http://localhost:5000}",
+  REACT_APP_API_URL: "${REACT_APP_API_URL}",
   REACT_APP_API_KEY: "${REACT_APP_API_KEY}",
   REACT_APP_AUTH_DOMAIN: "${REACT_APP_AUTH_DOMAIN}",
   REACT_APP_PROJECT_ID: "${REACT_APP_PROJECT_ID}",
@@ -17,9 +16,5 @@ window._env_ = {
 };
 EOF
 
-echo "✅ Runtime config generated successfully!"
-echo "📝 Config preview:"
-cat /app/build/runtime-config.js
-
-# Execute the CMD (serve command)
+echo "✅ Runtime config injected!"
 exec "$@"

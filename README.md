@@ -2,6 +2,35 @@
 
 FinTrack is a finance tracking web application that allows users to manage their income and expenses efficiently. It provides features such as adding money, tracking expenses, and importing/exporting transaction data in CSV format. The app also includes user authentication, data persistence with Firebase, and a clean, responsive UI with Ant Design.
 
+## 🔗 Live Deployments & Repositories
+
+### 🌐 Live Deployments
+
+You can access the live application here:
+
+🔗 **[FinTrack Live Vercel](https://fin-track-lovat.vercel.app/)**
+
+🔗 **[FinTrack Live AWS](http://13.233.55.243:30000/)**
+
+**Test Credentials**
+
+You can use the following credentials to log in and explore the application:
+
+- **Email**: `test@gmail.com`
+- **Password**: `123456`
+
+
+### 📦 Source Code Repositories
+
+🔗 **[Frontend Repository](https://github.com/ankitchouhan119/finTrack)**
+
+🔗 **[Backend Repository](https://github.com/ankitchouhan119/finTrack-backend)**
+
+🔗 **[Kubernetes (K8s) Repository](https://github.com/ankitchouhan119/finTrack-k8s)**
+
+
+
+
 ## Table of Contents
 
 - [Project Overview](#project-overview)
@@ -33,17 +62,6 @@ FinTrack is a finance tracking web application that allows users to manage their
 7. **Update Profile:** User can update profile after SignUp.
 
 
-## Hosted Link
-You can access the live application here:
-
-🔗 **[FinTrack Live](https://fin-track-lovat.vercel.app/)**
-
-**Test Credentials**
-
-You can use the following credentials to log in and explore the application:
-
-- **Email**: `test@gmail.com`
-- **Password**: `123456`
 
 ## Prerequisites
 
@@ -98,9 +116,15 @@ The app will be available at http://localhost:3000.
 
 1. **ReactJS:** Frontend framework for building a dynamic user interface.
 2. **Ant Design:** A UI components library for building modern, responsive layouts.
-1. **Firebase:** Backend-as-a-Service for authentication and Firestore database.
-2. **Node.js:** Used for API and server-side logic.
-3. **Papa Parse:** Library for CSV parsing to handle transaction imports and exports.
+3. **Firebase:** Backend-as-a-Service used for authentication and Firestore database management.
+4. **Node.js & Express.js:** Server-side runtime and framework for building RESTful APIs and backend logic
+5. **Papa Parse:** Library for CSV parsing to handle transaction imports and exports.
+6. **Docker:** Containerization platform used to package and run applications consistently across environments.
+5. **Kubernetes:** Container orchestration platform for deploying and managing frontend services.
+5. **AWS (EC2):** Cloud infrastructure used to host Kubernetes (k3s) and application services.
+5. **Vercel:** Platform for hosting and deploying the React frontend (CI/CD enabled).
+5. **Render:** Platform for deploying and hosting the backend Node.js service.
+
 
 ## Contributing 
 

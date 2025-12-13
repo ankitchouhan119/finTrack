@@ -15,7 +15,7 @@ import Chart from '../components/Charts/charts';
 import NoTransaction from '../components/NoTransaction/noTransaction';
 import LoginFirst from './LoginFirst';
 import { apiFetch } from '../utils/api';
-// import { API_URL } from '../utils/config';
+import { API_URL } from '../utils/config';
 
 function Dashboard() {
 
@@ -37,7 +37,7 @@ function Dashboard() {
   const [totalBalance, setTotalBalance] = useState(0);
 
   // const API_URL = getConfig('REACT_APP_API_URL') || 'http://localhost:5000';
-    const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000';
+    // const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000';
 
   const onFinish = (values, type) => {
     const newTransaction = {
