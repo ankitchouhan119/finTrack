@@ -8,6 +8,7 @@ import { SocialIcon } from 'react-social-icons'
 import { createUserWithEmailAndPassword, signInWithPopup, signInWithEmailAndPassword } from "firebase/auth";
 import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
+// import { API_URL } from '../../utils/config';
 
 function SignUpSignIn() {
   const [name, setName] = useState("");
@@ -17,6 +18,8 @@ function SignUpSignIn() {
   const [loading, setLoading] = useState(false);
   const [loginForm, setLoginForm] = useState(true);
   const navigate = useNavigate();
+
+  const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000';
 
   function Login() {
     setLoading(true);
@@ -47,7 +50,7 @@ function SignUpSignIn() {
           toast.success("User Created!");
           // create profile on backend
           const token = await user.getIdToken();
-          await fetch(`${process.env.REACT_APP_API_URL || "http://localhost:5000"}/api/users/profile`, {
+          await fetch(`${API_URL}/api/users/profile`, {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
@@ -83,7 +86,7 @@ function SignUpSignIn() {
     if (!user) return;
     try {
       const token = await user.getIdToken();
-      await fetch(`${process.env.REACT_APP_API_URL || "http://localhost:5000"}/api/users/profile`, {
+      await fetch(`$${API_URL}/api/users/profile`, {
         method: "POST",
         headers: { "Content-Type": "application/json", "Authorization": `Bearer ${token}` },
         body: JSON.stringify({

@@ -1,6 +1,11 @@
 import { auth } from "../firebase";
+// import { API_URL } from "./config";
+
+console.log("API_URL =>", process.env.REACT_APP_API_URL);
+console.log("API_KEY =>", process.env.REACT_APP_API_KEY);
 
 const API_URL = process.env.REACT_APP_API_URL || "http://localhost:5000";
+// const API_URL = getConfig('REACT_APP_API_URL') || "http://localhost:5000";
 
 async function getIdToken() {
   const user = auth.currentUser;

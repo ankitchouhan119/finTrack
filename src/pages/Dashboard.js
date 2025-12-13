@@ -15,6 +15,7 @@ import Chart from '../components/Charts/charts';
 import NoTransaction from '../components/NoTransaction/noTransaction';
 import LoginFirst from './LoginFirst';
 import { apiFetch } from '../utils/api';
+// import { API_URL } from '../utils/config';
 
 function Dashboard() {
 
@@ -34,6 +35,9 @@ function Dashboard() {
   const [income, setIncome] = useState(0);
   const [expense, setExpense] = useState(0);
   const [totalBalance, setTotalBalance] = useState(0);
+
+  // const API_URL = getConfig('REACT_APP_API_URL') || 'http://localhost:5000';
+    const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000';
 
   const onFinish = (values, type) => {
     const newTransaction = {
@@ -121,7 +125,7 @@ function Dashboard() {
     if (!auth.currentUser) return toast.error("User not authenticated");
     try {
       const token = await auth.currentUser.getIdToken();
-      const response = await fetch(`${process.env.REACT_APP_API_URL || "http://localhost:5000"}/api/transactions/export`, {
+      const response = await fetch(`${API_URL}/api/transactions/export`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       if (!response.ok) throw new Error("Export failed");
