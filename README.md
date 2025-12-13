@@ -8,7 +8,7 @@ FinTrack is a finance tracking web application that allows users to manage their
 
 You can access the live application here:
 
-🔗 **[FinTrack Live Vercel](https://fin-track-lovat.vercel.app/)**
+🔗 **[FinTrack Live Firebase](https://fintrack-119.web.app)**
 
 🔗 **[FinTrack Live AWS](http://13.233.55.243:30000/)**
 
@@ -122,7 +122,7 @@ The app will be available at http://localhost:3000.
 6. **Docker:** Containerization platform used to package and run applications consistently across environments.
 5. **Kubernetes:** Container orchestration platform for deploying and managing frontend services.
 5. **AWS (EC2):** Cloud infrastructure used to host Kubernetes (k3s) and application services.
-5. **Vercel:** Platform for hosting and deploying the React frontend (CI/CD enabled).
+5. **Firebase Hosting:** Platform for hosting and deploying the React frontend (CI/CD enabled).
 5. **Render:** Platform for deploying and hosting the backend Node.js service.
 
 
