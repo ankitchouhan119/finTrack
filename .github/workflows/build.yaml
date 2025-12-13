@@ -3,10 +3,9 @@ name: UI-DEV
 env:
   DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
   DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
-  IMAGE_REPOSITORY_NAME: ${{ vars.DEV_IMAGE_REPOSITORY_NAME }}
-  IMAGE_NAME: ${{ vars.DEV_IMAGE_NAME }}
-  K8S_NAMESPACE: ${{ vars.DEV_K8S_NAMESPACE }}
-  DEPLOYMENT_NAME: ${{ vars.DEV_DEPLOYMENT_NAME }}
+  IMAGE_REPOSITORY_NAME: ${{ vars.IMAGE_REPOSITORY_NAME }}
+  IMAGE_NAME: ${{ vars.IMAGE_NAME }}
+
 
 on:
   push:
@@ -22,7 +21,7 @@ on:
 
 
 jobs:
-  build-and-deploy:
+  build-and-push:
     runs-on: ubuntu-latest
 
     steps:
@@ -53,12 +52,11 @@ jobs:
           name: commit-id
           path: commit-id.txt
 
-
       - name: Build Docker Image
         run: |-
           sleep 30
           cat Dockerfile
-          IMAGE_PATH=ankit119/fintrack-frontend-k8s
+          IMAGE_PATH=${IMAGE_REPOSITORY_NAME}/${IMAGE_NAME}
           docker build -t ${IMAGE_PATH}:${COMMIT_ID} -f Dockerfile .
           docker images | grep ${IMAGE_PATH} | grep ${COMMIT_ID}
 
@@ -66,13 +64,13 @@ jobs:
       - name: Log in to Docker Hub
         uses: docker/login-action@v3
         with:
-          username: ${{ secrets.DOCKERHUB_USERNAME }}
-          password: ${{ secrets.DOCKERHUB_TOKEN }}
+          username: $DOCKERHUB_USERNAME
+          password: $DOCKERHUB_TOKEN
 
 
       - name: Push Docker Image
         run: |-
-          IMAGE_PATH=ankit119/fintrack-frontend-k8s
+          IMAGE_PATH=${IMAGE_REPOSITORY_NAME}/${IMAGE_NAME}
           IMAGE_FULL_NAME=${IMAGE_PATH}:${COMMIT_ID}
           echo "$IMAGE_FULL_NAME"
           docker push ${IMAGE_PATH}:${COMMIT_ID}
