@@ -34,7 +34,7 @@ function Profile() {
                     });
                 } catch (e) {
                     console.error(e);
-                    toast.error('No user data found!');
+                    // toast.error('No user data found!');
                 }
             }
         };
@@ -56,10 +56,10 @@ function Profile() {
             });
             setUserData(formData);
             setEditMode(false);
-            toast.success('Profile updated successfully!');
+            // toast.success('Profile updated successfully!');
         } catch (error) {
             console.error('Error updating profile: ', error);
-            toast.error('Failed to update profile');
+            // toast.error('Failed to update profile');
         }
     };
 

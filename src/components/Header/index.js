@@ -15,27 +15,64 @@ function Header() {
     const [photoUrl, setPhotoUrl] = useState(user?.photoURL || userImg);
     const navigate = useNavigate();
 
-    useEffect(() => {
-        const fetchUserData = async () => {
-            if (user) {
-                try {
-                    const data = await apiFetch("/api/users/profile");
-                    setUserData(data || {});
-                    if (data?.photoURL && data.photoURL !== user.photoURL) {
-                        try {
-                            await updateProfile(user, { photoURL: data.photoURL });
-                        } catch (_) { /* ignore updateProfile failures */ }
-                        setPhotoUrl(data.photoURL);
-                    } else {
-                        setPhotoUrl(user.photoURL || userImg);
-                    }
-                } catch (e) {
-                    console.error("Header fetch user:", e);
-                }
-            }
-        };
-        fetchUserData();
-    }, [user]);
+    // useEffect(() => {
+    //     const fetchUserData = async () => {
+    //         if (user) {
+    //             try {
+    //                 const data = await apiFetch("/api/users/profile");
+    //                 setUserData(data || {});
+    //                 if (data?.photoURL && data.photoURL !== user.photoURL) {
+    //                     try {
+    //                         await updateProfile(user, { photoURL: data.photoURL });
+    //                     } catch (_) { /* ignore updateProfile failures */ }
+    //                     setPhotoUrl(data.photoURL);
+    //                 } else {
+    //                     setPhotoUrl(user.photoURL || userImg);
+    //                 }
+    //             } catch (e) {
+    //                 console.error("Header fetch user:", e);
+    //             }
+    //         }
+    //     };
+    //     fetchUserData();
+    // }, [user]);
+
+
+useEffect(() => {
+  const fetchUserData = async () => {
+    if (!user) {
+      setPhotoUrl(userImg);
+      return;
+    }
+
+    try {
+      const data = await apiFetch("/api/users/profile");
+      setUserData(data || {});
+
+      const validPhoto =
+        data?.photoURL && data.photoURL.trim() !== ""
+          ? data.photoURL
+          : user.photoURL && user.photoURL.trim() !== ""
+          ? user.photoURL
+          : userImg;
+
+      // Update firebase profile only if needed
+      if (data?.photoURL && data.photoURL !== user.photoURL) {
+        try {
+          await updateProfile(user, { photoURL: data.photoURL });
+        } catch (_) {}
+      }
+
+      setPhotoUrl(validPhoto);
+    } catch (e) {
+      console.error("Header fetch user:", e);
+      setPhotoUrl(user.photoURL || userImg);
+    }
+  };
+
+  fetchUserData();
+}, [user]);
+
 
     function logoutFunc() {
         try {

@@ -42,7 +42,7 @@ function LandingPage() {
                     setUsername(data?.name || "");
                 } catch (e) {
                     console.error(e);
-                    toast.error("User data not found!");
+                    // toast.error("User data not found!");
                 }
             }
         };
@@ -92,7 +92,7 @@ function LandingPage() {
                     onClick={dashboard}
                     className='border-2 border-blue-500 mt-9 px-5 py-2 rounded-lg text-blue-500 hover:text-white hover:bg-blue-500 transition-all duration-300'
                 >
-                    {username}'s Dashboard
+                    {username ? `${username}'s Dashboard` : "Dashboard"}
                 </button> : <button
 
                     onClick={dashboard}

@@ -5,7 +5,7 @@ import Button from '../Button/button';
 import { auth, provider, provider1 } from '../../firebase';
 import { SocialIcon } from 'react-social-icons'
 
-import { createUserWithEmailAndPassword, signInWithPopup, signInWithEmailAndPassword } from "firebase/auth";
+import { createUserWithEmailAndPassword, signInWithPopup, signInWithEmailAndPassword, sendPasswordResetEmail } from "firebase/auth";
 import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
 // import { API_URL } from '../../utils/config';
@@ -86,7 +86,7 @@ function SignUpSignIn() {
     if (!user) return;
     try {
       const token = await user.getIdToken();
-      await fetch(`$${API_URL}/api/users/profile`, {
+      await fetch(`${API_URL}/api/users/profile`, {
         method: "POST",
         headers: { "Content-Type": "application/json", "Authorization": `Bearer ${token}` },
         body: JSON.stringify({
@@ -98,10 +98,10 @@ function SignUpSignIn() {
           }
         })
       });
-      toast.success("Doc created");
+      // toast.success("Doc created");
     } catch (e) {
       console.error(e);
-      toast.error("Failed to create user doc");
+      // toast.error("Failed to create user doc");
     }
   }
 
@@ -135,6 +135,20 @@ function SignUpSignIn() {
     }
   }
 
+    async function resetPassword() {
+    if (!email) {
+      toast.error("Please enter your email first!");
+      return;
+    }
+
+    try {
+      await sendPasswordResetEmail(auth, email);
+      toast.success("Password reset email sent!");
+    } catch (error) {
+      toast.error(error.message || "Failed to send reset email");
+    }
+  }
+
   return (
     <>
       {loginForm ? (
@@ -145,14 +159,20 @@ function SignUpSignIn() {
           <form className='gap-2' >
             <Input label={"Email"} type={"email"} state={email} setState={setEmail} placeholder={"xyz@abc.com"} />
             <Input label={"Password"} type={"password"} state={password} setState={setPassword} placeholder={"Password"} showPasswordToggle={true} />
+            <p
+            onClick={resetPassword}
+            className="text-right text-sm text-blue-600 cursor-pointer hover:underline"
+          >
+            Forgot Password?
+          </p>
             <Button disabled={loading} text={loading ? "Login In..." : "Sign In"} onClick={Login} />
             <p className='text-center mb-[1rem] cursor-pointer' onClick={() => setLoginForm(!loginForm)}>Don't have an account? <span className='cursor-pointer underline text-blue-700'>Create Account</span></p>
             <div className='flex justify-center w-full mt-2 text-sm gap-3'>
               <button type="button" onClick={googleAuth}>
-                <SocialIcon url="https://www.google.com" style={{ width: '2.5rem', height: '2.5rem' }} />
+                <SocialIcon network="google" style={{ width: '2.5rem', height: '2.5rem' }} />
               </button>
               <button type="button" onClick={facebookAuth}>
-                <SocialIcon url="https://www.facebook.com" style={{ width: '2.5rem', height: '2.5rem' }} />
+                <SocialIcon network="facebook" style={{ width: '2.5rem', height: '2.5rem' }} />
               </button>
             </div>
           </form>
@@ -171,10 +191,10 @@ function SignUpSignIn() {
             <p className='text-center mb-[1rem] cursor-pointer' onClick={() => setLoginForm(true)}>Already have an account? <span className='cursor-pointer underline text-blue-700'>Login</span></p>
             <div className='flex justify-center w-full mt-2 text-sm gap-3'>
               <button type="button" onClick={googleAuth}>
-                <SocialIcon url="https://www.google.com" style={{ width: '2.5rem', height: '2.5rem' }} />
+                <SocialIcon network="google" style={{ width: '2.5rem', height: '2.5rem' }} />
               </button>
               <button type="button" onClick={facebookAuth}>
-                <SocialIcon url="https://www.facebook.com" style={{ width: '2.5rem', height: '2.5rem' }} />
+                <SocialIcon network="facebook" style={{ width: '2.5rem', height: '2.5rem' }} />
               </button>
             </div>
           </form>
