@@ -54,10 +54,10 @@ function LandingPage() {
 
         <div className=''>
             <Helmet>
-                <title>FinTrack – Simple & Secure Expense Tracker</title>
+                <title>FinTrack – Simple & Secure Personal Expense Tracker</title>
                 <meta
                     name="description"
-                    content="FinTrack is a simple and secure expense tracker to manage income, track expenses, analyze spending with charts, and export CSV reports."
+                    content="FinTrack helps you track income and expenses, analyze spending, manage budgets, and export reports easily. Simple, secure, and fast money management."
                 />
                 <meta
                     name="keywords"
